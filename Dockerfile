@@ -8,6 +8,7 @@ WORKDIR /app
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY prisma ./prisma/
 RUN pnpm install --frozen-lockfile
+RUN pnpm exec prisma generate
 COPY . .
 RUN pnpm run build
 
