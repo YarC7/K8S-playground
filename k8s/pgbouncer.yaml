@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgbouncer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgbouncer
+  template:
+    metadata:
+      labels:
+        app: pgbouncer
+    spec:
+      containers:
+      - name: pgbouncer
+        image: edoburu/pgbouncer:latest
+        ports:
+        - containerPort: 6432
+        env:
+        - name: DB_HOST
+          value: "172.31.41.244"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "123456"
+        - name: DB_DATABASE
+          value: "postgres"
+        - name: AUTH_TYPE
+          value: "any"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgbouncer-service
+spec:
+  selector:
+    app: pgbouncer
+  ports:
+    - port: 6432
+      targetPort: 6432
