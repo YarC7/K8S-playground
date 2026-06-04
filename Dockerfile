@@ -18,6 +18,7 @@ ENV NODE_ENV=production
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY prisma ./prisma/
 RUN pnpm install --prod --frozen-lockfile
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
