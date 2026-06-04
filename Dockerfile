@@ -1,15 +1,20 @@
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
+FROM node:20-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-FROM node:20-alpine AS runner
+FROM base AS builder
+WORKDIR /app
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm run build
+
+FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY package*.json ./
-RUN npm ci --only=production
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --prod --frozen-lockfile
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
