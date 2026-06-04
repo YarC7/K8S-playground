@@ -13,15 +13,14 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm exec prisma generate
 RUN pnpm run build
 
-# --- TẦNG 2: RUNTIME RUNNER ---
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY prisma ./prisma/
 RUN pnpm install --prod --frozen-lockfile
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-# 💡 ĐÃ SỬA: Copy trực tiếp từ thư mục dist ở gốc của builder sang gốc của runner
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
