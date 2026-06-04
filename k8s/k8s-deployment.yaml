@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestjs-api
+  labels:
+    app: nestjs-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nestjs-api
+  template:
+    metadata:
+      labels:
+        app: nestjs-api
+    spec:
+      containers:
+      - name: nestjs-api
+        image: cankkun/nestjs-api:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nestjs-api-service
+spec:
+  type: NodePort
+  selector:
+    app: nestjs-api
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30001
