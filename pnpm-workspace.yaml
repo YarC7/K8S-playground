@@ -3,3 +3,4 @@ allowBuilds:
   '@prisma/engines': true
   '@swc/core': true
   'prisma': true
+  '@scarf/scarf': false
