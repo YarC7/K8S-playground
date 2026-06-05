@@ -19,6 +19,9 @@ spec:
         image: cankkun/nestjs-api:latest
         ports:
         - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:123456@172.31.41.244:5432/postgres?schema=public&pgbouncer=true"
         resources:
           limits:
             cpu: "500m"
